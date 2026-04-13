@@ -16,9 +16,10 @@ const S = {
   successSub: { fontSize: '13px', color: '#8B9DAF', lineHeight: 1.5 },
   error: { fontSize: '13px', color: '#E07B5B', marginTop: '8px' },
   footer: { marginTop: '24px', fontSize: '12px', color: '#555', lineHeight: 1.5 },
+  backBtn: { background: 'none', border: 'none', color: '#8B9DAF', fontSize: '13px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", marginBottom: '20px', padding: '4px 0' },
 };
 
-export default function AuthScreen({ onSignIn }) {
+export default function AuthScreen({ onSignIn, onBack }) {
   const [email, setEmail] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -45,6 +46,7 @@ export default function AuthScreen({ onSignIn }) {
   return (
     <div style={S.wrap}>
       <div style={S.card}>
+        {onBack && <button style={S.backBtn} onClick={onBack}>&larr; Back to home</button>}
         <div style={S.logoMark}>&Delta;</div>
         <div style={S.logoText}>Delta4</div>
         <div style={S.tagline}>

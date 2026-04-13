@@ -3,6 +3,7 @@ import { useAuth } from './lib/useAuth.js';
 import { useTasks, calcDelta, today, addDays, fromKey, toKey, startOfWeek, fmtDate, fmtMonthYear, daysInMonth, shortDay, getCat, CATS, RECURRENCE_OPTIONS, getOccurrences } from './lib/useTasks.js';
 import AuthScreen from './components/AuthScreen.jsx';
 import WeeklyReview from './components/WeeklyReview.jsx';
+import LandingPage from './components/LandingPage.jsx';
 
 /* ═══════════════════════════════════════════
    DELTA4 MVP — Supabase-backed Calendar App
@@ -10,13 +11,17 @@ import WeeklyReview from './components/WeeklyReview.jsx';
 
 export default function App() {
   const { user, profile, loading: authLoading, signInWithMagicLink, signOut } = useAuth();
+  const [showAuth, setShowAuth] = useState(false);
 
   if (authLoading) {
     return <div style={S.loadWrap}><div style={S.loadPulse}>&Delta;</div></div>;
   }
 
   if (!user) {
-    return <AuthScreen onSignIn={signInWithMagicLink} />;
+    if (showAuth) {
+      return <AuthScreen onSignIn={signInWithMagicLink} onBack={() => setShowAuth(false)} />;
+    }
+    return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
   return <Delta4App userId={user.id} profile={profile} onSignOut={signOut} />;
