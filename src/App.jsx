@@ -739,8 +739,8 @@ const S = {
   viewTab: { flex: 1, padding: '6px', background: 'transparent', border: 'none', borderRadius: '6px', color: '#8B9DAF', fontSize: '12px', fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textAlign: 'center' },
   viewTabActive: { background: '#161B22', color: '#E8B931', fontWeight: 600 },
 
-  navRow: { display: 'flex', alignItems: 'center', gap: '8px', padding: '0 16px' },
-  navArrow: { background: 'none', border: '1px solid #21262D', borderRadius: '6px', color: '#8B9DAF', fontSize: '18px', cursor: 'pointer', width: '28px', height: '28px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" },
+  navRow: { display: 'flex', alignItems: 'center', gap: '8px', padding: '0 16px', overflow: 'visible' },
+  navArrow: { background: 'none', border: '1px solid #21262D', borderRadius: '6px', color: '#8B9DAF', fontSize: '18px', cursor: 'pointer', width: '36px', height: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif", flexShrink: 0 },
   todayBtn: { background: '#161B22', border: '1px solid #21262D', borderRadius: '6px', color: '#8B9DAF', fontSize: '11px', padding: '4px 10px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
   navTitle: { flex: 1, textAlign: 'center', fontSize: '14px', fontWeight: 600 },
 

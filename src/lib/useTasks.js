@@ -23,7 +23,7 @@ export const CATS = [
   { id: 'revenue', label: 'Revenue', icon: '\u{1F4B0}', color: '#E8B931' },
   { id: 'growth', label: 'Growth', icon: '\u{1F4C8}', color: '#4CAF50' },
   { id: 'systems', label: 'Systems', icon: '\u2699\uFE0F', color: '#7B8CDE' },
-  { id: 'network', label: 'Network', icon: '\u{1F91D}', color: '#E07B5B' },
+  { id: 'personal', label: 'Personal', icon: '\u{1F3E0}', color: '#E07B5B' },
   { id: 'learn', label: 'Learn', icon: '\u{1F4DA}', color: '#9C6ADE' },
   { id: 'admin', label: 'Admin', icon: '\u{1F4CB}', color: '#8B9DAF' },
 ];
@@ -244,11 +244,9 @@ export function useTasks(userId) {
       const occs = getOccurrences(task, date, date);
       if (occs.length > 0) {
         items.push({ ...task, occDate: date });
-        seen.add(task.id);
-        return;
       }
 
-      // Only carry forward when viewing today (not browsing past dates)
+      // Only carry forward when viewing today or future (not browsing past dates)
       if (date < todayKey) return;
 
       if (!task.recurrence || task.recurrence === 'none') {
@@ -256,16 +254,17 @@ export function useTasks(userId) {
         if (task.date < date && !completions[`${task.id}:${task.date}`]) {
           items.push({ ...task, occDate: date, carriedOver: true, originalDate: task.date });
         }
-      } else if (!seen.has(task.id)) {
-        // Recurring task: carry over only the most recent missed occurrence
+      } else {
+        // Recurring task: carry over the most recent missed occurrence from the past
         const yesterday = addDays(todayKey, -1);
-        if (task.date >= date) return; // no past occurrences yet
-        const pastOccs = getOccurrences(task, task.date, yesterday);
+        if (task.date > yesterday) return; // no past occurrences possible
+        const lookback = addDays(todayKey, -30); // check up to 30 days back
+        const rangeStart = task.date > lookback ? task.date : lookback;
+        const pastOccs = getOccurrences(task, rangeStart, yesterday);
         // Walk backwards to find the latest incomplete occurrence
         for (let i = pastOccs.length - 1; i >= 0; i--) {
           if (!completions[`${task.id}:${pastOccs[i]}`]) {
             items.push({ ...task, occDate: date, carriedOver: true, originalDate: pastOccs[i] });
-            seen.add(task.id);
             break;
           }
         }
