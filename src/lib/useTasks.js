@@ -237,24 +237,38 @@ export function useTasks(userId) {
   const getTasksForDate = useCallback((date) => {
     const items = [];
     const todayKey = today();
+    const seen = new Set(); // prevent duplicates
 
     tasks.forEach(task => {
       // Normal recurrence / scheduled check for this date
       const occs = getOccurrences(task, date, date);
       if (occs.length > 0) {
         items.push({ ...task, occDate: date });
+        seen.add(task.id);
         return;
       }
 
-      // Carry-over logic: one-time tasks from the past that were never completed
-      // Only carry forward to today or future dates, not when browsing past dates
-      if (
-        (!task.recurrence || task.recurrence === 'none') &&
-        task.date < date &&
-        date >= todayKey &&
-        !completions[`${task.id}:${task.date}`]
-      ) {
-        items.push({ ...task, occDate: date, carriedOver: true, originalDate: task.date });
+      // Only carry forward when viewing today (not browsing past dates)
+      if (date < todayKey) return;
+
+      if (!task.recurrence || task.recurrence === 'none') {
+        // One-time task: carry over if its date is past and it was never completed
+        if (task.date < date && !completions[`${task.id}:${task.date}`]) {
+          items.push({ ...task, occDate: date, carriedOver: true, originalDate: task.date });
+        }
+      } else if (!seen.has(task.id)) {
+        // Recurring task: carry over only the most recent missed occurrence
+        const yesterday = addDays(todayKey, -1);
+        if (task.date >= date) return; // no past occurrences yet
+        const pastOccs = getOccurrences(task, task.date, yesterday);
+        // Walk backwards to find the latest incomplete occurrence
+        for (let i = pastOccs.length - 1; i >= 0; i--) {
+          if (!completions[`${task.id}:${pastOccs[i]}`]) {
+            items.push({ ...task, occDate: date, carriedOver: true, originalDate: pastOccs[i] });
+            seen.add(task.id);
+            break;
+          }
+        }
       }
     });
 
