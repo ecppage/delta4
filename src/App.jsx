@@ -244,8 +244,10 @@ function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut }) {
 // DAY VIEW
 // ═══════════════════════════════════════════
 function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDate }) {
-  const active = tasks.filter(t => !isComplete(t.id, date));
-  const completed = tasks.filter(t => isComplete(t.id, date));
+  // For carried-over tasks, use their original date as the completion key
+  const compDate = (t) => t.carriedOver ? t.originalDate : date;
+  const active = tasks.filter(t => !isComplete(t.id, compDate(t)));
+  const completed = tasks.filter(t => isComplete(t.id, compDate(t)));
   const pendingDelta = Math.round(active.reduce((s, t) => s + calcDelta(t.st, t.lt), 0) * 10) / 10;
   const earnedDelta = Math.round(completed.reduce((s, t) => s + calcDelta(t.st, t.lt), 0) * 10) / 10;
 
@@ -284,7 +286,7 @@ function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDat
                 <span style={S.badge}>{active.length}</span>
               </div>
               {active.map(task => (
-                <TaskRow key={task.id + date} task={task} date={date} done={false} onToggle={onToggle} onEdit={onEdit} />
+                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={false} onToggle={onToggle} onEdit={onEdit} />
               ))}
             </div>
           )}
@@ -295,7 +297,7 @@ function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDat
                 <span style={S.badge}>{completed.length}</span>
               </div>
               {completed.map(task => (
-                <TaskRow key={task.id + date} task={task} date={date} done={true} onToggle={onToggle} onEdit={onEdit} />
+                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={true} onToggle={onToggle} onEdit={onEdit} />
               ))}
             </div>
           )}
@@ -328,6 +330,7 @@ function TaskRow({ task, date, done, onToggle, onEdit }) {
           <span style={{ ...S.catPill, background: cat.color + '22', color: cat.color }}>{cat.icon} {cat.label}</span>
           {task.recurrence && task.recurrence !== 'none' && <span style={S.recurPill}>{task.recurrence}</span>}
           {task.duration && <span style={S.durPill}>{task.duration}m</span>}
+          {task.carriedOver && <span style={S.carryPill}>from {fmtDate(task.originalDate)}</span>}
         </div>
       </div>
       <div style={{
@@ -766,6 +769,7 @@ const S = {
   catPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', fontWeight: 500 },
   recurPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#E8B93115', color: '#E8B931' },
   durPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#21262D', color: '#8B9DAF' },
+  carryPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#E07B5B15', color: '#E07B5B', fontStyle: 'italic' },
   deltaPill: { fontFamily: "'DM Mono', monospace", fontSize: '12px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', flexShrink: 0 },
 
   weekDay: { background: '#161B22', borderRadius: '10px', padding: '10px 12px', marginBottom: '6px', border: '1px solid #21262D' },

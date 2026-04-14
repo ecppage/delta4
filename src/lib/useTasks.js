@@ -233,15 +233,33 @@ export function useTasks(userId) {
     return !!completions[`${taskId}:${date}`];
   }, [completions]);
 
-  // ── Get tasks for a single date ──
+  // ── Get tasks for a single date (with carry-over of unfinished past tasks) ──
   const getTasksForDate = useCallback((date) => {
     const items = [];
+    const todayKey = today();
+
     tasks.forEach(task => {
+      // Normal recurrence / scheduled check for this date
       const occs = getOccurrences(task, date, date);
-      if (occs.length > 0) items.push({ ...task, occDate: date });
+      if (occs.length > 0) {
+        items.push({ ...task, occDate: date });
+        return;
+      }
+
+      // Carry-over logic: one-time tasks from the past that were never completed
+      // Only carry forward to today or future dates, not when browsing past dates
+      if (
+        (!task.recurrence || task.recurrence === 'none') &&
+        task.date < date &&
+        date >= todayKey &&
+        !completions[`${task.id}:${task.date}`]
+      ) {
+        items.push({ ...task, occDate: date, carriedOver: true, originalDate: task.date });
+      }
     });
+
     return items.sort((a, b) => calcDelta(b.st, b.lt) - calcDelta(a.st, a.lt));
-  }, [tasks]);
+  }, [tasks, completions]);
 
   // ── Get tasks for a date range ──
   const getTasksForRange = useCallback((start, end) => {
