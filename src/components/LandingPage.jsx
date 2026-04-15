@@ -33,7 +33,7 @@ export default function LandingPage({ onGetStarted }) {
       {/* ─── HERO ─── */}
       <section style={S.hero}>
         <div style={S.heroInner}>
-          <div style={S.heroBadge}>Built for solopreneurs</div>
+          <div style={S.heroBadge}>Built for solopreneurs &amp; corporate professionals</div>
           <h1 style={S.heroH1}>
             Stop guessing what to work on.
             <br />
@@ -41,12 +41,13 @@ export default function LandingPage({ onGetStarted }) {
           </h1>
           <p style={S.heroSub}>
             Delta4 is the first daily action system that ranks every task by business impact —
-            not urgency, not deadlines, not gut feeling. One formula. One daily habit. Real compound growth.
+            not urgency, not deadlines, not gut feeling. Whether you're running a solo business or
+            leading a corporate team, one formula changes everything. One daily habit. Real compound growth.
           </p>
           <div style={S.heroBtns}>
             <button style={S.heroBtn} onClick={onGetStarted}>Start free &mdash; no card needed</button>
           </div>
-          <p style={S.heroProof}>Join solopreneurs who stopped being busy and started being productive.</p>
+          <p style={S.heroProof}>Join solopreneurs and corporate teams who stopped being busy and started being productive.</p>
 
           {/* App mockup */}
           <div style={S.mockup}>
@@ -87,7 +88,7 @@ export default function LandingPage({ onGetStarted }) {
           </p>
           <div style={S.painGrid}>
             {[
-              { stat: '80%', text: 'of daily tasks create zero lasting value for the average solopreneur' },
+              { stat: '80%', text: 'of daily tasks create zero lasting value — whether you run a solo business or manage a corporate team' },
               { stat: '10+', text: 'productivity tools tried and abandoned — none answered "what matters most?"' },
               { stat: '0', text: 'tools on the market that score tasks by actual business impact' },
             ].map((p, i) => (
@@ -212,7 +213,7 @@ export default function LandingPage({ onGetStarted }) {
       {/* ─── PERSONAS / TESTIMONIALS ─── */}
       <section style={S.section}>
         <div style={S.container}>
-          <h2 style={S.sectionH2}>Built for how solopreneurs actually work</h2>
+          <h2 style={S.sectionH2}>Built for how high-performers actually work</h2>
           <div style={S.personaGrid}>
             {[
               {
@@ -233,6 +234,12 @@ export default function LandingPage({ onGetStarted }) {
                 quote: 'The category analytics showed me I was spending 60% on admin. I restructured my week and my pipeline tripled in two months.',
                 delta: 'Admin ratio: 60% \u2192 20%',
               },
+              {
+                name: 'David, 38',
+                role: 'VP of Operations, Series B startup',
+                quote: 'I rolled Delta4 out to my team of 12. Within a month, our sprint velocity doubled because everyone could see which tasks actually moved our KPIs.',
+                delta: 'Team sprint velocity: 2x in 30 days',
+              },
             ].map((p, i) => (
               <div key={i} style={S.personaCard}>
                 <div style={S.personaQuote}>"{p.quote}"</div>
@@ -252,7 +259,7 @@ export default function LandingPage({ onGetStarted }) {
         <div style={S.container}>
           <h2 style={S.sectionH2}>Simple pricing. Start free.</h2>
           <p style={S.sectionSub}>
-            The full scoring engine is free forever. Pro unlocks analytics for when you're ready to optimize.
+            The full scoring engine is free forever. Pro unlocks analytics. Corporate teams get volume licensing.
           </p>
 
           {/* Toggle */}
