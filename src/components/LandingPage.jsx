@@ -331,14 +331,14 @@ export default function LandingPage({ onGetStarted }) {
             <div style={S.corpBadge}>ENTERPRISE</div>
             <h3 style={S.corpHeading}>Corporate license for 10–100 users</h3>
             <p style={S.corpSubtext}>Volume pricing, team dashboards, and onboarding support for organizations.</p>
-            <a href="mailto:ecppage@gmail.com" style={S.corpLink}>
+            <a href="mailto:delta4app@gmail.com" style={S.corpLink}>
               <span style={S.corpMailIcon}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="4" width="20" height="16" rx="2"/>
                   <path d="m22 7-10 5L2 7"/>
                 </svg>
               </span>
-              ecppage@gmail.com
+              delta4app@gmail.com
             </a>
           </div>
         </div>
@@ -377,7 +377,7 @@ export default function LandingPage({ onGetStarted }) {
             <a href="https://youtube.com/@delta4app" target="_blank" rel="noopener noreferrer" style={S.socialIcon} title="YouTube">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             </a>
-            <a href="mailto:ecppage@gmail.com" style={S.socialIcon} title="Email">
+            <a href="mailto:delta4app@gmail.com" style={S.socialIcon} title="Email">
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
                 <rect x="2" y="3" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
                 <path d="M2 6l8 5 8-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
