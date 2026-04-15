@@ -328,8 +328,18 @@ export default function LandingPage({ onGetStarted }) {
 
           {/* CORPORATE */}
           <div style={S.corpBox}>
-            <span style={S.corpText}>Corporate license for 10–100 users?</span>
-            <a href="mailto:ecppage@gmail.com" style={S.corpLink}>Contact us</a>
+            <div style={S.corpBadge}>ENTERPRISE</div>
+            <h3 style={S.corpHeading}>Corporate license for 10–100 users</h3>
+            <p style={S.corpSubtext}>Volume pricing, team dashboards, and onboarding support for organizations.</p>
+            <a href="mailto:ecppage@gmail.com" style={S.corpLink}>
+              <span style={S.corpMailIcon}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="4" width="20" height="16" rx="2"/>
+                  <path d="m22 7-10 5L2 7"/>
+                </svg>
+              </span>
+              ecppage@gmail.com
+            </a>
           </div>
         </div>
       </section>
@@ -495,9 +505,56 @@ const S = {
   priceCheck: { color: '#4CAF50', marginRight: '8px', fontWeight: 700 },
   priceBtnOutline: { width: '100%', padding: '12px', background: 'transparent', border: '2px solid #21262D', borderRadius: '10px', color: '#E6EDF3', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
   priceBtnGold: { width: '100%', padding: '12px', background: 'linear-gradient(135deg, #E8B931, #D4A017)', border: 'none', borderRadius: '10px', color: '#0D1117', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
-  corpBox: { textAlign: 'center', marginTop: '32px', padding: '20px', background: '#0D111799', borderRadius: '12px', border: '1px solid #21262D' },
-  corpText: { fontSize: '15px', color: '#8B9DAF', marginRight: '8px' },
-  corpLink: { fontSize: '15px', fontWeight: 700, color: '#E8B931', textDecoration: 'none' },
+  corpBox: {
+    textAlign: 'center',
+    marginTop: '40px',
+    padding: '36px 28px',
+    background: 'linear-gradient(135deg, rgba(232, 185, 49, 0.12) 0%, rgba(212, 160, 23, 0.06) 100%)',
+    borderRadius: '16px',
+    border: '2px solid #E8B931',
+    boxShadow: '0 8px 32px rgba(232, 185, 49, 0.15)',
+    position: 'relative',
+  },
+  corpBadge: {
+    display: 'inline-block',
+    padding: '6px 14px',
+    background: 'linear-gradient(135deg, #E8B931, #D4A017)',
+    color: '#0D1117',
+    fontSize: '11px',
+    fontWeight: 800,
+    letterSpacing: '1.5px',
+    borderRadius: '6px',
+    marginBottom: '16px',
+    fontFamily: "'DM Mono', monospace",
+  },
+  corpHeading: {
+    fontSize: '22px',
+    fontWeight: 700,
+    color: '#E6EDF3',
+    margin: '0 0 8px 0',
+    fontFamily: "'DM Sans', sans-serif",
+  },
+  corpSubtext: {
+    fontSize: '15px',
+    color: '#8B9DAF',
+    margin: '0 0 20px 0',
+    lineHeight: 1.5,
+  },
+  corpLink: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '10px',
+    fontSize: '16px',
+    fontWeight: 700,
+    color: '#E8B931',
+    textDecoration: 'none',
+    padding: '12px 24px',
+    background: 'rgba(232, 185, 49, 0.1)',
+    border: '1px solid rgba(232, 185, 49, 0.4)',
+    borderRadius: '10px',
+    fontFamily: "'DM Mono', monospace",
+  },
+  corpMailIcon: { display: 'inline-flex', alignItems: 'center' },
 
   /* CTA */
   cta: { padding: '80px 24px', textAlign: 'center' },
