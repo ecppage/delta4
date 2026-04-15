@@ -12,6 +12,7 @@ import LandingPage from './components/LandingPage.jsx';
 export default function App() {
   const { user, profile, loading: authLoading, signInWithMagicLink, signOut } = useAuth();
   const [showAuth, setShowAuth] = useState(false);
+  const [showLanding, setShowLanding] = useState(false);
 
   if (authLoading) {
     return <div style={S.loadWrap}><div style={S.loadPulse}>&Delta;</div></div>;
@@ -24,11 +25,16 @@ export default function App() {
     return <LandingPage onGetStarted={() => setShowAuth(true)} />;
   }
 
-  return <Delta4App userId={user.id} profile={profile} onSignOut={signOut} />;
+  // Logged-in user viewing landing page (no sign-out needed)
+  if (showLanding) {
+    return <LandingPage onGetStarted={() => setShowLanding(false)} />;
+  }
+
+  return <Delta4App userId={user.id} profile={profile} onSignOut={signOut} onGoHome={() => setShowLanding(true)} />;
 }
 
 // ─── Main App (post-auth) ───
-function Delta4App({ userId, profile, onSignOut }) {
+function Delta4App({ userId, profile, onSignOut, onGoHome }) {
   const {
     tasks, completions, loaded,
     addTask, updateTask, deleteTask, toggleComplete, isComplete,
@@ -79,6 +85,7 @@ function Delta4App({ userId, profile, onSignOut }) {
           showMenu={showMenu}
           setShowMenu={setShowMenu}
           onSignOut={onSignOut}
+          onGoHome={onGoHome}
         />
 
         {view === 'day' && (
@@ -157,7 +164,7 @@ function Delta4App({ userId, profile, onSignOut }) {
 // ═══════════════════════════════════════════
 // HEADER + NAV
 // ═══════════════════════════════════════════
-function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut }) {
+function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut, onGoHome }) {
   const { view, setView, focusDate, setFocusDate } = nav;
   const views = ['day', 'week', 'month', 'year'];
   const isCalView = views.includes(view);
@@ -206,13 +213,47 @@ function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut }) {
           </button>
           <button onClick={onAdd} style={S.addBtn}>+ New</button>
           <div style={{ position: 'relative' }}>
-            <button onClick={() => setShowMenu(!showMenu)} style={S.avatarBtn}>
-              {(profile?.display_name || '?')[0].toUpperCase()}
+            <button onClick={() => setShowMenu(!showMenu)} style={S.avatarBtn} title="Menu">
+              <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                <rect x="2" y="3" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                <path d="M2 6l8 5 8-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
             </button>
             {showMenu && (
               <div style={S.menuDrop}>
-                <div style={S.menuEmail}>{profile?.email}</div>
-                <button onClick={onSignOut} style={S.menuItem}>Sign out</button>
+                <a href={'mailto:' + (profile?.email || '')} style={S.menuEmailLink}>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0 }}>
+                    <rect x="2" y="3" width="16" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" fill="none" />
+                    <path d="M2 6l8 5 8-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  </svg>
+                  {profile?.email}
+                </a>
+                <div style={S.menuDivider} />
+                <button onClick={onGoHome} style={S.menuItem}>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                    <path d="M3 10l7-7 7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M5 9v7a1 1 0 001 1h3v-4h2v4h3a1 1 0 001-1V9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Home
+                </button>
+                <button onClick={onSignOut} style={S.menuItem}>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none" style={{ marginRight: '8px', verticalAlign: 'middle' }}>
+                    <path d="M7 17H4a1 1 0 01-1-1V4a1 1 0 011-1h3M14 14l3-3m0 0l-3-3m3 3H7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Sign out
+                </button>
+                <div style={S.menuDivider} />
+                <div style={S.menuSocial}>
+                  <a href="https://x.com/delta4app" target="_blank" rel="noopener noreferrer" style={S.menuSocialLink} title="X (Twitter)">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                  </a>
+                  <a href="https://linkedin.com/company/delta4app" target="_blank" rel="noopener noreferrer" style={S.menuSocialLink} title="LinkedIn">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                  </a>
+                  <a href="https://delta4app.substack.com" target="_blank" rel="noopener noreferrer" style={S.menuSocialLink} title="Substack">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"/></svg>
+                  </a>
+                </div>
               </div>
             )}
           </div>
@@ -731,9 +772,12 @@ const S = {
   iconBtn: { background: 'none', border: 'none', color: '#8B9DAF', cursor: 'pointer', padding: '6px' },
   addBtn: { background: 'linear-gradient(135deg, #E8B931, #D4A017)', color: '#0D1117', border: 'none', borderRadius: '8px', padding: '6px 14px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
   avatarBtn: { width: '28px', height: '28px', borderRadius: '50%', background: '#161B22', border: '1px solid #21262D', color: '#E8B931', fontSize: '13px', fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'DM Sans', sans-serif" },
-  menuDrop: { position: 'absolute', top: '36px', right: 0, background: '#161B22', border: '1px solid #21262D', borderRadius: '8px', padding: '8px 0', minWidth: '180px', zIndex: 100, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' },
-  menuEmail: { padding: '8px 16px', fontSize: '12px', color: '#8B9DAF', borderBottom: '1px solid #21262D' },
-  menuItem: { display: 'block', width: '100%', padding: '8px 16px', background: 'none', border: 'none', color: '#E6EDF3', fontSize: '13px', cursor: 'pointer', textAlign: 'left', fontFamily: "'DM Sans', sans-serif" },
+  menuDrop: { position: 'absolute', top: '36px', right: 0, background: '#161B22', border: '1px solid #21262D', borderRadius: '8px', padding: '8px 0', minWidth: '200px', zIndex: 100, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' },
+  menuEmailLink: { display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 16px', fontSize: '12px', color: '#E8B931', textDecoration: 'none', fontFamily: "'DM Sans', sans-serif" },
+  menuDivider: { height: '1px', background: '#21262D', margin: '4px 0' },
+  menuItem: { display: 'flex', alignItems: 'center', width: '100%', padding: '8px 16px', background: 'none', border: 'none', color: '#E6EDF3', fontSize: '13px', cursor: 'pointer', textAlign: 'left', fontFamily: "'DM Sans', sans-serif" },
+  menuSocial: { display: 'flex', gap: '12px', padding: '8px 16px', justifyContent: 'center' },
+  menuSocialLink: { color: '#8B9DAF', textDecoration: 'none', display: 'flex', alignItems: 'center' },
 
   viewTabs: { display: 'flex', gap: '2px', padding: '0 16px', marginBottom: '6px' },
   viewTab: { flex: 1, padding: '6px', background: 'transparent', border: 'none', borderRadius: '6px', color: '#8B9DAF', fontSize: '12px', fontWeight: 500, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", textAlign: 'center' },
