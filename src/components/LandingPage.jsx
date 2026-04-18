@@ -20,7 +20,7 @@ export default function LandingPage({ onGetStarted }) {
         <div style={S.navInner}>
           <div style={S.navLogo}>
             <span style={S.navDelta}>&Delta;</span>
-            <span style={S.navName}>Delta4</span>
+            <span style={S.navName}>Delta4app</span>
           </div>
           <div style={S.navLinks}>
             <button style={S.navLink} onClick={() => scrollTo('how')}>How it works</button>
@@ -40,7 +40,7 @@ export default function LandingPage({ onGetStarted }) {
             <span style={S.heroAccent}>Know which tasks move the needle.</span>
           </h1>
           <p style={S.heroSub}>
-            Delta4 is the first daily action system that ranks every task by business impact —
+            Delta4app is the first daily action system that ranks every task by business impact —
             not urgency, not deadlines, not gut feeling. Whether you're running a solo business or
             leading a corporate team, one formula changes everything. One daily habit. Real compound growth.
           </p>
@@ -170,14 +170,14 @@ export default function LandingPage({ onGetStarted }) {
         <div style={S.container}>
           <h2 style={S.sectionH2}>Not another task manager</h2>
           <p style={S.sectionSub}>
-            Every tool organizes tasks. Only Delta4 ranks them by impact.
+            Every tool organizes tasks. Only Delta4app ranks them by impact.
           </p>
           <div style={S.tableWrap}>
             <table style={S.table}>
               <thead>
                 <tr>
                   <th style={{ ...S.th, textAlign: 'left' }}>Feature</th>
-                  <th style={S.th}>Delta4</th>
+                  <th style={S.th}>Delta4app</th>
                   <th style={S.th}>Sunsama</th>
                   <th style={S.th}>Todoist</th>
                   <th style={S.th}>Trevor AI</th>
@@ -219,13 +219,13 @@ export default function LandingPage({ onGetStarted }) {
               {
                 name: 'Sarah, 34',
                 role: 'Online course creator',
-                quote: 'I used to finish every day exhausted but with nothing to show for it. Now I open Delta4, work the top 3 tasks, and my revenue pipeline actually moves.',
+                quote: 'I used to finish every day exhausted but with nothing to show for it. Now I open Delta4app, work the top 3 tasks, and my revenue pipeline actually moves.',
                 delta: 'Avg daily \u0394: 6.2 \u2192 8.4 in 4 weeks',
               },
               {
                 name: 'Marcus, 28',
                 role: 'Consultant + side-project builder',
-                quote: 'I only get 10 hours a week for my SaaS. Delta4 makes sure I spend them on the highest-leverage tasks, not just whatever feels urgent.',
+                quote: 'I only get 10 hours a week for my SaaS. Delta4app makes sure I spend them on the highest-leverage tasks, not just whatever feels urgent.',
                 delta: 'Shipped 3x faster with weekly \u0394 tracking',
               },
               {
@@ -237,7 +237,7 @@ export default function LandingPage({ onGetStarted }) {
               {
                 name: 'David, 38',
                 role: 'VP of Operations, Series B startup',
-                quote: 'I rolled Delta4 out to my team of 12. Within a month, our sprint velocity doubled because everyone could see which tasks actually moved our KPIs.',
+                quote: 'I rolled Delta4app out to my team of 12. Within a month, our sprint velocity doubled because everyone could see which tasks actually moved our KPIs.',
                 delta: 'Team sprint velocity: 2x in 30 days',
               },
             ].map((p, i) => (
@@ -361,7 +361,7 @@ export default function LandingPage({ onGetStarted }) {
         <div style={S.footerInner}>
           <div style={S.footerLeft}>
             <span style={S.footerDelta}>&Delta;</span>
-            <span style={S.footerName}>Delta4</span>
+            <span style={S.footerName}>Delta4app</span>
             <span style={S.footerCopy}>&copy; {new Date().getFullYear()} Elizabeth Campbell Page</span>
           </div>
           <div style={S.footerCenter}>

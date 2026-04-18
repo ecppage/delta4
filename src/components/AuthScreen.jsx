@@ -48,7 +48,7 @@ export default function AuthScreen({ onSignIn, onBack }) {
       <div style={S.card}>
         {onBack && <button style={S.backBtn} onClick={onBack}>&larr; Back to home</button>}
         <div style={S.logoMark}>&Delta;</div>
-        <div style={S.logoText}>Delta4</div>
+        <div style={S.logoText}>Delta4app</div>
         <div style={S.tagline}>
           Stop guessing what to work on.<br />
           Know which tasks move the needle.

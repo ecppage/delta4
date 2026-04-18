@@ -78,7 +78,7 @@ Answer the questions like this:
 Wait 30-60 seconds. It will build and deploy. At the end you'll see:
 
 ```
-✅ Production: https://delta4-mvp-xxxxx.vercel.app
+✅ Production: https://delta4app.vercel.app
 ```
 
 That URL is your live app! Copy it.
@@ -88,7 +88,7 @@ That URL is your live app! Copy it.
 The app won't work yet because Vercel needs your Supabase keys.
 
 1. Go to **https://vercel.com/dashboard**
-2. Click on your **delta4-mvp** project
+2. Click on your **delta4app** project (formerly delta4-mvp)
 3. Click **Settings** tab → **Environment Variables** in the left sidebar
 4. Add these two variables (click Add after each):
 
@@ -103,7 +103,7 @@ The app won't work yet because Vercel needs your Supabase keys.
 
 ### Step 6: Tell Supabase about your live URL
 
-1. Copy your Vercel URL (e.g. `https://delta4-mvp-xxxxx.vercel.app`)
+1. Copy your Vercel URL (e.g. `https://delta4app.vercel.app`)
 2. Go to **https://supabase.com/dashboard/project/wqljlrquhbncmyagfzop/auth/url-configuration**
 3. Set **Site URL** to your Vercel URL
 4. Add your Vercel URL to **Redirect URLs** (click Add URL)

@@ -194,7 +194,7 @@ function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut, onGoHom
       <div style={S.headerTop}>
         <div style={S.logoRow}>
           <span style={S.logoMark}>&Delta;</span>
-          <span style={S.logoText}>Delta4</span>
+          <span style={S.logoText}>Delta4app</span>
         </div>
         <div style={S.headerActions}>
           <button onClick={() => setView('weekly-review')} style={S.iconBtn} title="Weekly Review">
