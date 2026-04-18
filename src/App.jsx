@@ -535,12 +535,12 @@ function YearView({ date, tasks, completions, getTasksForRange, isComplete, onMo
     <div style={S.viewPad}>
       <div style={S.scoreStrip}>
         <div style={S.scoreCol}>
-          <div style={S.scoreNum}>{totalEarned}</div>
+          <div style={{ ...S.scoreNum, color: '#4CAF50' }}>{totalEarned}</div>
           <div style={S.scoreLbl}>&Delta; Earned ({year})</div>
         </div>
         <div style={S.scoreDivider} />
         <div style={S.scoreCol}>
-          <div style={{ ...S.scoreNum, color: '#4CAF50' }}>{totalDone}/{totalTasks}</div>
+          <div style={{ ...S.scoreNum, color: '#7B8CDE' }}>{totalDone}/{totalTasks}</div>
           <div style={S.scoreLbl}>Completed</div>
         </div>
       </div>
@@ -723,31 +723,39 @@ function AnalyticsView({ tasks, completions, getTasksForRange, isComplete, onBac
         <div />
       </div>
 
+      {/* ── Score strip ── */}
       <div style={S.scoreStrip}>
         <div style={S.scoreCol}>
-          <div style={S.scoreNum}>{allRecent.length}</div>
-          <div style={S.scoreLbl}>Tasks (30d)</div>
+          <div style={{ ...S.scoreNum, color: '#7B8CDE' }}>{allRecent.length}</div>
+          <div style={S.scoreLbl}>Tasks</div>
+          <div style={S.scoreExplain}>Scheduled last 30 days</div>
         </div>
         <div style={S.scoreDivider} />
         <div style={S.scoreCol}>
           <div style={{ ...S.scoreNum, color: '#4CAF50' }}>{Math.round(earnedDelta)}</div>
           <div style={S.scoreLbl}>&Delta; Earned</div>
+          <div style={S.scoreExplain}>Impact points completed</div>
         </div>
         <div style={S.scoreDivider} />
         <div style={S.scoreCol}>
-          <div style={S.scoreNum}>{rate}%</div>
+          <div style={{ ...S.scoreNum, color: '#E8B931' }}>{rate}%</div>
           <div style={S.scoreLbl}>Completion</div>
+          <div style={S.scoreExplain}>Tasks done vs. scheduled</div>
         </div>
       </div>
 
+      {/* ── 14-day trend chart ── */}
       <div style={S.chartBox}>
-        <div style={S.chartLabel}>Last 14 Days &mdash; Delta Planned vs Earned</div>
+        <div style={S.chartLabel}>14-Day Trend &mdash; Planned vs Earned</div>
+        <div style={S.chartExplain}>
+          Gold bars show your planned delta each day. Green fill shows how much impact you actually delivered. A full green bar = perfect execution.
+        </div>
         <div style={S.chartRow}>
           {days14.map((d, i) => (
             <div key={i} style={S.chartCol}>
               <div style={S.chartBarWrap}>
-                <div style={{ ...S.chartBarBg, height: `${(d.delta / maxDayDelta) * 80}px` }}>
-                  <div style={{ ...S.chartBarFg, height: d.delta > 0 ? `${(d.earned / d.delta) * 100}%` : '0' }} />
+                <div style={{ ...S.chartBarBg, height: `${(d.delta / maxDayDelta) * 80}px`, background: 'rgba(232,185,49,0.25)', border: '1px solid rgba(232,185,49,0.3)' }}>
+                  <div style={{ ...S.chartBarFg, height: d.delta > 0 ? `${(d.earned / d.delta) * 100}%` : '0', background: 'linear-gradient(to top, #4CAF50, #66BB6A)' }} />
                 </div>
               </div>
               <div style={S.chartDayLbl}>{fromKey(d.date).getDate()}</div>
@@ -755,24 +763,35 @@ function AnalyticsView({ tasks, completions, getTasksForRange, isComplete, onBac
           ))}
         </div>
         <div style={S.chartLegend}>
-          <span><span style={{ ...S.legendDot, background: '#21262D' }} />Planned</span>
-          <span><span style={{ ...S.legendDot, background: '#E8B931' }} />Earned</span>
+          <span><span style={{ ...S.legendDot, background: 'rgba(232,185,49,0.4)', border: '1px solid #E8B931' }} />Planned</span>
+          <span><span style={{ ...S.legendDot, background: '#4CAF50' }} />Earned</span>
         </div>
       </div>
 
+      {/* ── By category ── */}
       <div style={S.chartBox}>
         <div style={S.chartLabel}>By Category (30 days)</div>
+        <div style={S.chartExplain}>
+          How your completed delta breaks down across each area of work. Low earned on a high-priority category signals under-investment.
+        </div>
         {Object.entries(catMap).map(([id, data]) => {
           const cat = getCat(id);
+          const completionPct = data.total > 0 ? Math.round((data.done / data.total) * 100) : 0;
           return (
             <div key={id} style={S.catStatRow}>
               <span style={S.catStatIcon}>{cat.icon}</span>
               <span style={S.catStatName}>{cat.label}</span>
-              <span style={S.catStatCount}>{data.done}/{data.total}</span>
-              <span style={{ ...S.catStatDelta, color: cat.color }}>&Delta;{Math.round(data.earned)}</span>
+              <span style={{ ...S.catStatCount, color: '#7B8CDE' }}>{data.done}/{data.total}</span>
+              <span style={{ fontSize: '10px', color: '#E8B931', minWidth: '32px', textAlign: 'right' }}>{completionPct}%</span>
+              <span style={{ ...S.catStatDelta, color: '#4CAF50' }}>&Delta;{Math.round(data.earned)}</span>
             </div>
           );
         })}
+        <div style={S.catStatLegend}>
+          <span style={{ color: '#7B8CDE' }}>done/scheduled</span>
+          <span style={{ color: '#E8B931' }}>completion</span>
+          <span style={{ color: '#4CAF50' }}>Δ earned</span>
+        </div>
       </div>
     </div>
   );
@@ -812,11 +831,12 @@ const S = {
   todayBtn: { background: '#161B22', border: '1px solid #21262D', borderRadius: '6px', color: '#8B9DAF', fontSize: '11px', padding: '4px 10px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif" },
   navTitle: { flex: 1, textAlign: 'center', fontSize: '14px', fontWeight: 600 },
 
-  scoreStrip: { display: 'flex', alignItems: 'center', background: '#161B22', borderRadius: '12px', padding: '14px', margin: '12px 0', border: '1px solid #21262D' },
+  scoreStrip: { display: 'flex', alignItems: 'center', background: '#161B22', borderRadius: '12px', padding: '14px 10px', margin: '12px 0', border: '1px solid #21262D' },
   scoreCol: { flex: 1, textAlign: 'center' },
   scoreNum: { fontFamily: "'DM Mono', monospace", fontSize: '22px', fontWeight: 700, color: '#E8B931' },
   scoreLbl: { fontSize: '10px', color: '#8B9DAF', textTransform: 'uppercase', letterSpacing: '0.4px', marginTop: '2px' },
-  scoreDivider: { width: '1px', height: '32px', background: '#21262D', margin: '0 6px' },
+  scoreExplain: { fontSize: '9px', color: '#555C66', marginTop: '3px', lineHeight: 1.3 },
+  scoreDivider: { width: '1px', height: '44px', background: '#21262D', margin: '0 6px' },
 
   viewPad: { padding: '8px 16px' },
   sectionHead: { display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 0 6px' },
@@ -903,7 +923,8 @@ const S = {
   saveBtn: { width: '100%', padding: '12px', background: 'linear-gradient(135deg, #E8B931, #D4A017)', border: 'none', borderRadius: '10px', color: '#0D1117', fontSize: '14px', fontWeight: 700, cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", marginTop: '8px' },
 
   chartBox: { background: '#161B22', borderRadius: '12px', padding: '14px', border: '1px solid #21262D', marginBottom: '12px' },
-  chartLabel: { fontSize: '12px', fontWeight: 600, color: '#8B9DAF', marginBottom: '12px' },
+  chartLabel: { fontSize: '12px', fontWeight: 600, color: '#8B9DAF', marginBottom: '4px' },
+  chartExplain: { fontSize: '11px', color: '#555C66', marginBottom: '12px', lineHeight: 1.5 },
   chartRow: { display: 'flex', alignItems: 'flex-end', gap: '4px', height: '100px' },
   chartCol: { flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center' },
   chartBarWrap: { flex: 1, display: 'flex', alignItems: 'flex-end', width: '100%', height: '80px' },
@@ -916,6 +937,7 @@ const S = {
   catStatRow: { display: 'flex', alignItems: 'center', gap: '8px', padding: '7px 0', borderBottom: '1px solid #21262D' },
   catStatIcon: { fontSize: '14px' },
   catStatName: { flex: 1, fontSize: '12px', fontWeight: 500 },
-  catStatCount: { fontSize: '11px', color: '#8B9DAF' },
+  catStatCount: { fontSize: '11px', color: '#7B8CDE' },
   catStatDelta: { fontFamily: "'DM Mono', monospace", fontSize: '12px', fontWeight: 600, minWidth: '40px', textAlign: 'right' },
+  catStatLegend: { display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px', fontSize: '9px', opacity: 0.6 },
 };
