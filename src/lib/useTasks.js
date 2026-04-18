@@ -249,8 +249,11 @@ export function useTasks(userId) {
     tasks.forEach(task => {
       // Normal recurrence / scheduled check for this date
       const occs = getOccurrences(task, date, date);
+      let scheduledToday = false;
       if (occs.length > 0) {
         items.push({ ...task, occDate: date });
+        seen.add(task.id);
+        scheduledToday = true;
       }
 
       // Only carry forward when viewing today or future (not browsing past dates)
@@ -258,11 +261,14 @@ export function useTasks(userId) {
 
       if (!task.recurrence || task.recurrence === 'none') {
         // One-time task: carry over if its date is past and it was never completed
-        if (task.date < date && !completions[`${task.id}:${task.date}`]) {
+        if (task.date < date && !completions[`${task.id}:${task.date}`] && !seen.has(task.id)) {
           items.push({ ...task, occDate: date, carriedOver: true, originalDate: task.date });
+          seen.add(task.id);
         }
       } else {
         // Recurring task: carry over the most recent missed occurrence from the past
+        // But skip if this task already has a scheduled occurrence for today
+        if (scheduledToday) return;
         const yesterday = addDays(todayKey, -1);
         if (task.date > yesterday) return; // no past occurrences possible
         const lookback = addDays(todayKey, -30); // check up to 30 days back
@@ -271,7 +277,10 @@ export function useTasks(userId) {
         // Walk backwards to find the latest incomplete occurrence
         for (let i = pastOccs.length - 1; i >= 0; i--) {
           if (!completions[`${task.id}:${pastOccs[i]}`]) {
-            items.push({ ...task, occDate: date, carriedOver: true, originalDate: pastOccs[i] });
+            if (!seen.has(task.id)) {
+              items.push({ ...task, occDate: date, carriedOver: true, originalDate: pastOccs[i] });
+              seen.add(task.id);
+            }
             break;
           }
         }

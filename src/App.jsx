@@ -95,6 +95,7 @@ function Delta4App({ userId, profile, onSignOut, onGoHome }) {
             isComplete={isComplete}
             onToggle={toggleComplete}
             onEdit={(t) => openEditor(t)}
+            onDelete={handleDeleteTask}
             onAdd={() => openEditor(null, focusDate)}
             setFocusDate={setFocusDate}
           />
@@ -284,7 +285,7 @@ function Header({ nav, onAdd, profile, showMenu, setShowMenu, onSignOut, onGoHom
 // ═══════════════════════════════════════════
 // DAY VIEW
 // ═══════════════════════════════════════════
-function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDate }) {
+function DayView({ date, tasks, isComplete, onToggle, onEdit, onDelete, onAdd, setFocusDate }) {
   // For carried-over tasks, use their original date as the completion key
   const compDate = (t) => t.carriedOver ? t.originalDate : date;
   const active = tasks.filter(t => !isComplete(t.id, compDate(t)));
@@ -327,7 +328,7 @@ function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDat
                 <span style={S.badge}>{active.length}</span>
               </div>
               {active.map(task => (
-                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={false} onToggle={onToggle} onEdit={onEdit} />
+                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={false} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
               ))}
             </div>
           )}
@@ -338,7 +339,7 @@ function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDat
                 <span style={S.badge}>{completed.length}</span>
               </div>
               {completed.map(task => (
-                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={true} onToggle={onToggle} onEdit={onEdit} />
+                <TaskRow key={task.id + compDate(task)} task={task} date={compDate(task)} done={true} onToggle={onToggle} onEdit={onEdit} onDelete={onDelete} />
               ))}
             </div>
           )}
@@ -351,11 +352,22 @@ function DayView({ date, tasks, isComplete, onToggle, onEdit, onAdd, setFocusDat
 // ═══════════════════════════════════════════
 // TASK ROW
 // ═══════════════════════════════════════════
-function TaskRow({ task, date, done, onToggle, onEdit }) {
+function TaskRow({ task, date, done, onToggle, onEdit, onDelete }) {
+  const [confirmDel, setConfirmDel] = useState(false);
   const delta = calcDelta(task.st, task.lt);
   const cat = getCat(task.category);
   const isHigh = delta >= 7;
   const isMed = delta >= 4;
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    if (confirmDel) {
+      onDelete(task.id);
+    } else {
+      setConfirmDel(true);
+      setTimeout(() => setConfirmDel(false), 3000);
+    }
+  };
 
   return (
     <div style={{ ...S.taskRow, opacity: done ? 0.5 : 1, borderLeft: `3px solid ${isHigh ? '#E8B931' : isMed ? '#7B8CDE' : '#21262D'}` }}>
@@ -373,6 +385,18 @@ function TaskRow({ task, date, done, onToggle, onEdit }) {
           {task.duration && <span style={S.durPill}>{task.duration}m</span>}
           {task.carriedOver && <span style={S.carryPill}>from {fmtDate(task.originalDate)}</span>}
         </div>
+      </div>
+      <div style={S.taskActions}>
+        <button onClick={(e) => { e.stopPropagation(); onEdit(task); }} style={S.taskActionBtn} title="Edit">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+            <path d="M14.5 3.5l2 2L7 15H5v-2L14.5 3.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+        <button onClick={handleDelete} style={{ ...S.taskActionBtn, color: confirmDel ? '#ff4444' : '#8B9DAF' }} title={confirmDel ? 'Tap again to confirm' : 'Delete'}>
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+            <path d="M6 6l8 8M14 6l-8 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+        </button>
       </div>
       <div style={{
         ...S.deltaPill,
@@ -814,6 +838,8 @@ const S = {
   recurPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#E8B93115', color: '#E8B931' },
   durPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#21262D', color: '#8B9DAF' },
   carryPill: { fontSize: '10px', padding: '1px 7px', borderRadius: '5px', background: '#E07B5B15', color: '#E07B5B', fontStyle: 'italic' },
+  taskActions: { display: 'flex', gap: '2px', flexShrink: 0, marginRight: '4px' },
+  taskActionBtn: { background: 'none', border: 'none', color: '#8B9DAF', cursor: 'pointer', padding: '4px', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'color 0.15s' },
   deltaPill: { fontFamily: "'DM Mono', monospace", fontSize: '12px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', flexShrink: 0 },
 
   weekDay: { background: '#161B22', borderRadius: '10px', padding: '10px 12px', marginBottom: '6px', border: '1px solid #21262D' },
